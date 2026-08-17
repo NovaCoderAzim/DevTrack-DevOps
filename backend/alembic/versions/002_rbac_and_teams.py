@@ -37,7 +37,7 @@ def upgrade() -> None:
         with op.get_context().autocommit_block():
             op.execute("ALTER TYPE userrole ADD VALUE IF NOT EXISTS 'PROJECT_MANAGER'")
             op.execute("ALTER TYPE userrole ADD VALUE IF NOT EXISTS 'DEVELOPER'")
-        op.execute("UPDATE users SET role = 'DEVELOPER' WHERE role = 'USER'")
+        op.execute("UPDATE users SET role = 'DEVELOPER' WHERE role::text = 'USER'")
 
 
 def downgrade() -> None:
