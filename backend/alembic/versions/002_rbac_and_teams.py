@@ -31,13 +31,13 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('project_id', 'user_id')
     )
 
-    # 3. Add Enum values for Postgres
+    # 3. Add Enum values safely for Postgres
     bind = op.get_bind()
     if bind.dialect.name == 'postgresql':
-        bind.execute(sa.text("COMMIT"))
-        bind.execute(sa.text("ALTER TYPE userrole ADD VALUE IF NOT EXISTS 'PROJECT_MANAGER'"))
-        bind.execute(sa.text("ALTER TYPE userrole ADD VALUE IF NOT EXISTS 'DEVELOPER'"))
-        bind.execute(sa.text("UPDATE users SET role = 'DEVELOPER' WHERE role = 'USER'"))
+        with op.get_context().autocommit_block():
+            op.execute("ALTER TYPE userrole ADD VALUE IF NOT EXISTS 'PROJECT_MANAGER'")
+            op.execute("ALTER TYPE userrole ADD VALUE IF NOT EXISTS 'DEVELOPER'")
+        op.execute("UPDATE users SET role = 'DEVELOPER' WHERE role = 'USER'")
 
 
 def downgrade() -> None:
