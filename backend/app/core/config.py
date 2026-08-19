@@ -8,13 +8,22 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "DevTrack - Cloud-Native Issue & Task Management Platform"
     API_V1_STR: str = "/api/v1"
     
-    # Environment variables
+    # Environment variables (overridable at runtime)
     DATABASE_URL: str = "postgresql://postgres:12345@localhost:5432/devtrack_db"
     JWT_SECRET: str = "devtrack_super_secret_jwt_key_change_in_production_32bytes"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
-    BACKEND_CORS_ORIGINS: Union[List[str], str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+    BACKEND_CORS_ORIGINS: Union[List[str], str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:80",
+        "http://127.0.0.1:80",
+        "http://localhost",
+        "http://127.0.0.1"
+    ]
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
     @classmethod
